@@ -63,7 +63,7 @@
 
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.enable = false; # <-- because i use pipewire..
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -88,22 +88,27 @@
     extraGroups = [ "networkmanager" "kvm" "wheel" "libvirtd" ];
     packages = with pkgs; [
     #  thunderbird
+      gnumake
       vscode
-      make
       gimp
       firefox
       vim
       keepassxc
-      neovim
+      # neovim
       python311
       discord
-      ciscoPacketTracer8
+      #ciscoPacketTracer8 not working
       virt-manager
       python311Packages.pip
       wget
       git
       virt-manager
       qemu
+      dconf #maybe will help w/ virt-manager?
+      # gnome.gnome-tweaks
+      # wezterm
+      openvpn
+      qbittorrent
     ];
   };
 
@@ -112,10 +117,12 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [ virt-manager 
+
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #wget
   #git
+  # ADDED VIRT-MANAGER TO MAKE IT WORK! MINE
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -127,7 +134,10 @@
   # };
 
   # List services that you want to enable:
-  virtualisation.libvirtd.enable = true; 
+  virtualisation.libvirtd.enable = true;
+  programs.dconf.enable = true;
+
+
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
