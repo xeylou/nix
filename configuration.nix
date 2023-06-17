@@ -44,10 +44,14 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  ##the only to lines to add for xfce
+  ##if you want gnome
+  ##Enable the GNOME Desktop Environment.
+  #services.xserver.displayManager.gdm.enable = true;
+  #services.xserver.desktopManager.gnome.enable = true;
+  # Enable the XFCE Desktop Environment.
+  services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.desktopManager.xfce.enable = true;
 
   # Configure keymap in X11
   services.xserver = {
@@ -60,10 +64,15 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-
+  
+  # Conguring bluetooth myself
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+  # launch blueman-applet
+	
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = false; # <-- because i use pipewire..
+  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -85,31 +94,32 @@
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    extraGroups = [ "networkmanager" "kvm" "wheel" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" ];
     packages = with pkgs; [
-    #  thunderbird
+      firefox
       gnumake
       vscode
       gimp
       firefox
-      vim
       keepassxc
-      # neovim
       python311
       discord
-      #ciscoPacketTracer8 not working
       virt-manager
       python311Packages.pip
       wget
       git
       virt-manager
       qemu
-      dconf #maybe will help w/ virt-manager?
-      # gnome.gnome-tweaks
-      # wezterm
+      dconf #for virt-manager
+      # gnome.gnome-tweaks # usefull for gnome
       openvpn
       qbittorrent
-      maple-mono # my terminal font
+      # maple-mono # my terminal font (doesnt work)
+      #maybe add cisco pt but bugging
+      # ciscoPacketTracer8 <-- still not working
+      #samba
+      remmina
+      freerdp
     ];
   };
 
@@ -119,11 +129,9 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [ virt-manager 
-
+  ## ADDED VIRT-MANAGER
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #wget
-  #git
-  # ADDED VIRT-MANAGER TO MAKE IT WORK! MINE
+  #  wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -137,7 +145,7 @@
   # List services that you want to enable:
   virtualisation.libvirtd.enable = true;
   programs.dconf.enable = true;
-
+  ##ADDED FOR VIRT-MANAGER
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
