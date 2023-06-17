@@ -109,6 +109,7 @@
       # wezterm
       openvpn
       qbittorrent
+      maple-mono # my terminal font
     ];
   };
 
