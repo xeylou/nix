@@ -68,24 +68,32 @@
   # Conguring bluetooth myself
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
-  # launch blueman-applet
+  # launch blueman-applet after that
+
+  # Switching to pulseaudio
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.support32Bit = true;    ## If compatibility with 32-bit applications is desired.
+  nixpkgs.config.pulseaudio = true;
+  # hardware.pulseaudio.extraConfig = "load-module module-combine-sink";  
+
+  
 	
   # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+  #sound.enable = true;
+  #security.rtkit.enable = true;
+  #services.pipewire = {
+  #  enable = true;
+  #  alsa.enable = true;
+  #  alsa.support32Bit = true;
+  #  pulse.enable = true;
+  #  # If you want to use JACK applications, uncomment this
+  #  #jack.enable = true;
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
+  #  # use the example session manager (no others are packaged yet so this is enabled by default,
+  #  # no need to redefine it in your config for now)
+  #  #media-session.enable = true;
+  # };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -94,7 +102,7 @@
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" ];
     packages = with pkgs; [
       firefox
       gnumake
@@ -120,6 +128,9 @@
       #samba
       remmina
       freerdp
+      vlc
+      solaar
+      openssl #fcking ssh keys
     ];
   };
 
