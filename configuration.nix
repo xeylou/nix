@@ -131,6 +131,10 @@
       vlc
       solaar
       openssl #fcking ssh keys
+      unzip
+      #gns3-gui
+      #gns3-server
+      gparted
     ];
   };
 
