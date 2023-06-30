@@ -106,7 +106,8 @@
     packages = with pkgs; [
       firefox
       gnumake
-      vscode
+      # vscode
+      vscodium
       gimp
       firefox
       keepassxc
@@ -132,9 +133,6 @@
       solaar
       openssl #fcking ssh keys
       unzip
-      #gns3-gui
-      #gns3-server
-      gparted
     ];
   };
 
