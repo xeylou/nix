@@ -104,7 +104,9 @@
     description = "xeylou";
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" ];
     packages = with pkgs; [
-      firefox
+      # firefox
+      # librewolf
+      brave
       gnumake
       # vscode
       vscodium
