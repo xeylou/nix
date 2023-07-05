@@ -53,6 +53,16 @@
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
 
+  ##enabling tor services
+  services.tor.enable = true;
+  services.tor.client.enable = true;
+  services.tor.settings = {
+      UseBridges = true;
+      ClientTransportPlugin = "obfs4 exec ${pkgs.obfs4}/bin/obfs4proxy";
+      Bridge = "obfs4 IP:ORPort [fingerprint]";
+  };
+
+
   # Configure keymap in X11
   services.xserver = {
     layout = "fr";
@@ -63,7 +73,7 @@
   console.keyMap = "fr";
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing.enable = false;
   
   # Conguring bluetooth myself
   hardware.bluetooth.enable = true;
@@ -135,7 +145,20 @@
       solaar
       openssl #fcking ssh keys
       unzip
+      unrar
+      macchanger
+      wireshark
+      gnupg
+      pinentry
+      tor
+      tor-browser-bundle-bin
     ];
+  };
+
+  # lines i added for firewall
+  networking.firewall = {
+  enable = true;
+  allowedTCPPorts = [ 80 1111 ];
   };
 
   # Allow unfree packages
@@ -143,8 +166,8 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [ virt-manager 
-  ## ADDED VIRT-MANAGER
+  environment.systemPackages = with pkgs; [ virt-manager pkgs.wireguard-tools
+  ## ADDED VIRT-MANAGER & WIREGUARD
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
