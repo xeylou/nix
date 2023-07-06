@@ -10,6 +10,15 @@
       ./hardware-configuration.nix
     ];
 
+  # testing fonts
+  fonts.fonts = with pkgs; [
+    # noto-fonts
+    # noto-fonts-cjk
+    # noto-fonts-emoji
+
+    maple-mono
+  ];
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -44,11 +53,14 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+  
   ##the only to lines to add for xfce
   ##if you want gnome
-  ##Enable the GNOME Desktop Environment.
+
+  # Enable the GNOME Desktop Environment.
   #services.xserver.displayManager.gdm.enable = true;
   #services.xserver.desktopManager.gnome.enable = true;
+
   # Enable the XFCE Desktop Environment.
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
@@ -61,7 +73,6 @@
       ClientTransportPlugin = "obfs4 exec ${pkgs.obfs4}/bin/obfs4proxy";
       Bridge = "obfs4 IP:ORPort [fingerprint]";
   };
-
 
   # Configure keymap in X11
   services.xserver = {
@@ -80,7 +91,7 @@
   services.blueman.enable = true;
   # launch blueman-applet after that
 
-  # Switching to pulseaudio
+  # Switching to pulseaudio, pipewire is under
   sound.enable = true;
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.support32Bit = true;    ## If compatibility with 32-bit applications is desired.
@@ -90,9 +101,9 @@
   
 	
   # Enable sound with pipewire.
-  #sound.enable = true;
-  #security.rtkit.enable = true;
-  #services.pipewire = {
+  # sound.enable = true;
+  # security.rtkit.enable = true;
+  # services.pipewire = {
   #  enable = true;
   #  alsa.enable = true;
   #  alsa.support32Bit = true;
@@ -114,51 +125,46 @@
     description = "xeylou";
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" ];
     packages = with pkgs; [
-      # firefox
-      # librewolf
+
+      # software
       brave
-      gnumake
-      # vscode
-      vscodium
       gimp
-      firefox
       keepassxc
-      python311
       discord
-      virt-manager
-      python311Packages.pip
-      wget
-      git
-      virt-manager
-      qemu
-      dconf #for virt-manager
-      # gnome.gnome-tweaks # usefull for gnome
-      openvpn
-      qbittorrent
-      # maple-mono # my terminal font (doesnt work)
-      #maybe add cisco pt but bugging
-      # ciscoPacketTracer8 <-- still not working
-      #samba
-      remmina
-      freerdp
       vlc
       solaar
-      openssl #fcking ssh keys
-      unzip
-      unrar
+
+      # networking related
       macchanger
       wireshark
-      gnupg
-      pinentry
-      tor
-      tor-browser-bundle-bin
-    ];
-  };
+      openvpn
+      qbittorrent
+      remmina
+      freerdp
 
-  # lines i added for firewall
-  networking.firewall = {
-  enable = true;
-  allowedTCPPorts = [ 80 1111 ];
+      # utilities
+      openssl # ssh keys
+      unzip
+      unrar
+      gnumake
+      gnupg
+      pinentry # dependency gnupg
+      wget
+
+      # virtualisation
+      qemu
+      virt-manager
+      dconf # dependency virt-manager
+
+      # ide & development stuff
+      tmux
+      neovim
+      git      
+      vscodium
+      python311
+      python311Packages.pip
+
+    ];
   };
 
   # Allow unfree packages
@@ -193,6 +199,22 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
+  # lines i added for firewall
+  # networking.firewall = {
+  #  enable = true;
+  #  allowedTCPPorts = [ 80 1111 ];
+  # };
+
+  ## me testing to launch command at start
+  systemd.services.foo = {
+    script = ''
+      systemctl stop bluetooth
+    '';
+  wantedBy = [ "multi-user.target" ];
+  };
+
+
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
