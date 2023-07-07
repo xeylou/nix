@@ -5,102 +5,104 @@
 { config, pkgs, ... }:
 
 {
+  
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
+  
+  # dependency needed when updating
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-12.2.3"
+  ];
 
-  # testing fonts
+  # maple fonts
   fonts.fonts = with pkgs; [
+    maple-mono
+    # maple-mono-otf
+    # maple-mono-woff2
+    # maple-mono-SC-NF
+
     # noto-fonts
     # noto-fonts-cjk
     # noto-fonts-emoji
-
-    maple-mono
   ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "null"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "Europe/Paris";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
+  # uefi w/ out secure boot
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.systemd-boot.configurationLimit = 5;
+    loader.efi.canTouchEfiVariables = true;
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # network configuration
+  networking = {
+    hostName = "null";
+    networkmanager.enable = true;
+    # wireless.enable = true;  # wireless support via wpa_supplicant
+    # proxy.default = "http://user:password@proxy:port/";
+    # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+    
+    # firewall.enable = false;
+    # networking.firewall.allowedTCPPorts = [ ... ];
+    # networking.firewall.allowedUDPPorts = [ ... ];
+  };
+
+  # time zone and locale settings
+  time.timeZone = "Europe/Paris";
   
-  ##the only to lines to add for xfce
-  ##if you want gnome
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+          LC_ADDRESS = "en_US.UTF-8";
+          LC_IDENTIFICATION = "en_US.UTF-8";
+          LC_MEASUREMENT = "en_US.UTF-8";
+          LC_MONETARY = "en_US.UTF-8";
+          LC_NAME = "en_US.UTF-8";
+          LC_NUMERIC = "en_US.UTF-8";
+          LC_PAPER = "en_US.UTF-8";
+          LC_TELEPHONE = "en_US.UTF-8";
+          LC_TIME = "en_US.UTF-8";
+    };
+  };
 
-  # Enable the GNOME Desktop Environment.
-  #services.xserver.displayManager.gdm.enable = true;
-  #services.xserver.desktopManager.gnome.enable = true;
+  # w11 windowing system
+  services.xserver.enable = true;
 
-  # Enable the XFCE Desktop Environment.
+  # xfce
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
 
-  ##enabling tor services
-  services.tor.enable = true;
-  services.tor.client.enable = true;
-  services.tor.settings = {
-      UseBridges = true;
-      ClientTransportPlugin = "obfs4 exec ${pkgs.obfs4}/bin/obfs4proxy";
-      Bridge = "obfs4 IP:ORPort [fingerprint]";
-  };
+  # if you want gnome
+  #services.xserver.displayManager.gdm.enable = true;
+  #services.xserver.desktopManager.gnome.enable = true;
 
-  # Configure keymap in X11
+  # keymap in X11
   services.xserver = {
     layout = "fr";
     xkbVariant = "";
   };
 
-  # Configure console keymap
+  # console keymap
   console.keyMap = "fr";
 
-  # Enable CUPS to print documents.
+  # cups (to print documents)
   services.printing.enable = false;
   
-  # Conguring bluetooth myself
+  # configuring bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
   # launch blueman-applet after that
 
-  # Switching to pulseaudio, pipewire is under
+  # enabling pulseaudio bc of bluetooth needs
+  # could be replaced by pipewire is under
   sound.enable = true;
   hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.support32Bit = true;    ## If compatibility with 32-bit applications is desired.
+  hardware.pulseaudio.support32Bit = true;
   nixpkgs.config.pulseaudio = true;
   # hardware.pulseaudio.extraConfig = "load-module module-combine-sink";  
-
-  
 	
-  # Enable sound with pipewire.
+  # pipewire.
   # sound.enable = true;
   # security.rtkit.enable = true;
   # services.pipewire = {
@@ -111,15 +113,10 @@
   #  # If you want to use JACK applications, uncomment this
   #  #jack.enable = true;
 
-  #  # use the example session manager (no others are packaged yet so this is enabled by default,
-  #  # no need to redefine it in your config for now)
-  #  #media-session.enable = true;
-  # };
+  # allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # user settings
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
@@ -143,18 +140,19 @@
       freerdp
 
       # utilities
-      openssl # ssh keys
+      openssl  # ssh keys
       unzip
       unrar
       gnumake
       gnupg
-      pinentry # dependency gnupg
+      pinentry  # dependency gnupg
       wget
+      etcher
 
       # virtualisation
       qemu
       virt-manager
-      dconf # dependency virt-manager
+      dconf  # virt-manager dependency
 
       # ide & development stuff
       tmux
@@ -163,58 +161,29 @@
       vscodium
       python311
       python311Packages.pip
+      gcc
 
     ];
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # packages installed in system profile
   environment.systemPackages = with pkgs; [ virt-manager pkgs.wireguard-tools
-  ## ADDED VIRT-MANAGER & WIREGUARD
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
+  # enabling services
   virtualisation.libvirtd.enable = true;
   programs.dconf.enable = true;
-  ##ADDED FOR VIRT-MANAGER
-
-  # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
-  # lines i added for firewall
-  # networking.firewall = {
-  #  enable = true;
-  #  allowedTCPPorts = [ 80 1111 ];
-  # };
-
-  ## me testing to launch command at start
+  # each time you rebuild nix, following
+  # commands will be executed
   systemd.services.foo = {
     script = ''
       systemctl stop bluetooth
     '';
   wantedBy = [ "multi-user.target" ];
   };
-
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
