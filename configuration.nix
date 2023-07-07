@@ -16,16 +16,9 @@
     "electron-12.2.3"
   ];
 
-  # maple fonts
+  # fonts
   fonts.fonts = with pkgs; [
-    maple-mono
-    # maple-mono-otf
-    # maple-mono-woff2
-    # maple-mono-SC-NF
-
-    # noto-fonts
-    # noto-fonts-cjk
-    # noto-fonts-emoji
+    nerdfonts  # terminal devicons - firemono nerd font regular
   ];
 
   # uefi w/ out secure boot
@@ -125,11 +118,9 @@
 
       # software
       brave
-      gimp
       keepassxc
       discord
       vlc
-      solaar
 
       # networking related
       macchanger
@@ -145,7 +136,7 @@
       unrar
       gnumake
       gnupg
-      pinentry  # dependency gnupg
+      pinentry  # gnupg dependency
       wget
       etcher
 
@@ -154,11 +145,11 @@
       virt-manager
       dconf  # virt-manager dependency
 
-      # ide & development stuff
+      # ide & dev
       tmux
+      vim
       neovim
       git      
-      vscodium
       python311
       python311Packages.pip
       gcc
