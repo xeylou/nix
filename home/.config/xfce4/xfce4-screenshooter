@@ -1,0 +1,13 @@
+app=/nix/store/m3m1235pgpzaxqcdgbzhd3gfsk7xpsh3-brave-1.52.129/bin/brave
+custom_action_command=none
+last_user=
+last_extension=png
+enable_imgur_upload=true
+show_in_folder=false
+screenshot_dir=file:/home/xeylou/Downloads
+action=1
+delay=0
+region=1
+show_mouse=0
+show_border=1
+
