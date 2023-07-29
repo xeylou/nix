@@ -18,13 +18,17 @@
   ];
 
   # uefi w/ out secure boot
-  boot.loader = {
-    # can be changed for grub
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 5;
+  boot = {
+    supportedFilesystems = [ "ntfs" ];
+    # to see ntfs formated drives
+    loader = {
+      # can be changed for grub
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 5;
+      };
+      efi.canTouchEfiVariables = true;
     };
-    efi.canTouchEfiVariables = true;
   };
 
   # enabling tpm for w11 virt
