@@ -17,10 +17,10 @@
     # terminal devicons - firemono nerd font mono regular 13
   ];
 
-  # uefi w/ out secure boot & ntfs drives
+  # uefi w/ out secure boot & ntfs support
   boot = {
     supportedFilesystems = [ "ntfs" ];
-    # to deal w/ ntfs formated drives
+    # to deal w/ ntfs partitions
     loader = {
       # can be changed for grub
       systemd-boot = {
@@ -59,10 +59,12 @@
     #   allowedTCPPorts = [ ... ];
     #   allowedUDPPorts = [ ... ];
     # };
+
   };
 
   # time zone and locale settings
   time.timeZone = "Europe/Paris";  
+
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -76,6 +78,7 @@
           LC_TELEPHONE = "en_US.UTF-8";
           LC_TIME = "en_US.UTF-8";
     };
+
   };
 
   # x11 w/ xfce
@@ -95,21 +98,21 @@
   # console keymap
   console.keyMap = "fr";
 
-  # cups (to print documents)
+  # cups server (to print documents)
   services.printing.enable = false;
   
   # configuring bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  # enabling pulseaudio for bluetooth needs
+  # changing to pulseaudio for bluetooth needs
   # could be replaced by pipewire under
   sound.enable = true;
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.support32Bit = true;
   nixpkgs.config.pulseaudio = true;
   # hardware.pulseaudio.extraConfig = "load-module module-combine-sink";  
-	
+  # # lines here are for pipewire
   # pipewire.sound.enable = true;
   # security.rtkit.enable = true;
   # services.pipewire = {
@@ -127,13 +130,12 @@
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    #  tss for tpm
+    # tss group for tpm
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" ];
     packages = with pkgs; [
 
       # software
       brave
-      mullvad-browser
       keepassxc
       discord
       vlc
@@ -149,25 +151,23 @@
 
       # utilities
       openssl  # ssh keys
-      # unzip  nix-shell -p
+      # those can be use w/ nix-shell -p
+      # unzip
       # unrar
-      gnumake
-      gcc
+      # wget
+      # gnumake
+      # gcc
       gnupg
       pinentry  # gnupg dependency
-      # wget  nix-shell -p
-      xmousepasteblock # disable middle clic pasting
 
       # virtualisation
       qemu
       virt-manager
       dconf  # virt-manager dependency
-      # swtpm # tpm emulation
 
       # ide & dev
       tmux
       vim
-      neovim
       vscodium
       git
       python3
@@ -181,6 +181,7 @@
   environment.systemPackages = with pkgs; [
   ];
 
+  # virtualisation related
   virtualisation.libvirtd = {
     enable = true;
 
@@ -194,8 +195,10 @@
       swtpm.enable = true;
       runAsRoot = false;
     };
+
   };
 
+  # still virtualisation related
   environment.etc = {
     "ovmf/edk2-x86_64-secure-code.fd" = {
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
@@ -207,7 +210,7 @@
   };  
   
   # enabling services
-  programs.dconf.enable = true;
+  programs.dconf.enable = true;  # virt-manager related
   # services.openssh.enable = true;
 
   # # each time you rebuild nix
