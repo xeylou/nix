@@ -5,22 +5,22 @@
     [ # results of the hardware scan
       ./hardware-configuration.nix
     ];
-
-  # # dependency needed when updating
-  # nixpkgs.config.permittedInsecurePackages = [
-  #   "electron-12.2.3"
-  # ];
   
+  # dependency needed when updating
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-12.2.3"
+  ];
+
   #font
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
     # terminal devicons - firemono nerd font mono regular 13
   ];
 
-  # uefi w/ out secure boot & ntfs drives
+  # uefi w/ out secure boot
   boot = {
     supportedFilesystems = [ "ntfs" ];
-    # to deal w/ ntfs formated drives
+    # to see ntfs formated drives
     loader = {
       # can be changed for grub
       systemd-boot = {
@@ -42,13 +42,10 @@
   networking = {
     hostName = "null";
     networkmanager.enable = true;
-    
-    # # configuring /etc/hosts
-    # extraHosts = 
-    # ''
-    #   127.0.0.1 xeylou.fr
-    # '';
-
+    extraHosts = 
+    ''
+      127.0.0.1 xeylou.fr
+    '';
     # wireless.enable = true;  # wireless support via wpa_supplicant
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -62,7 +59,8 @@
   };
 
   # time zone and locale settings
-  time.timeZone = "Europe/Paris";  
+  time.timeZone = "Europe/Paris";
+  
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -78,13 +76,15 @@
     };
   };
 
-  # x11 w/ xfce
-  services.xserver = {
-    # can be replaced with gdm & gnome
-    enable = true;
-    displayManager.lightdm.enable = true;
-    desktopManager.xfce.enable = true;
-  };
+  # x11 windowing system
+  services.xserver.enable = true;
+
+  # xfce
+  services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.desktopManager.xfce.enable = true;
+  # example if you want gnome
+  #services.xserver.displayManager.gdm.enable = true;
+  #services.xserver.desktopManager.gnome.enable = true;
 
   # keymap in x11
   services.xserver = {
@@ -105,6 +105,7 @@
   # enabling pulseaudio for bluetooth needs
   # could be replaced by pipewire under
   sound.enable = true;
+
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.support32Bit = true;
   nixpkgs.config.pulseaudio = true;
