@@ -139,6 +139,7 @@
       keepassxc
       discord
       vlc
+      solaar  # logi pop keys buttons assignation
 
       # networking related
       macchanger
@@ -193,7 +194,7 @@
       ovmf.enable = true;
       ovmf.packages = [ pkgs.OVMFFull.fd ];
       swtpm.enable = true;
-      runAsRoot = false;
+      runAsRoot = true;
     };
 
   };
