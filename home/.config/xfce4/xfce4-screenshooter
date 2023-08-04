@@ -1,11 +1,11 @@
-app=/nix/store/m3m1235pgpzaxqcdgbzhd3gfsk7xpsh3-brave-1.52.129/bin/brave
+app=/nix/store/h0yx272j7pgxgc53jj5s0cz55nqyd9r6-brave-1.56.9/bin/brave
 custom_action_command=none
 last_user=
 last_extension=png
 enable_imgur_upload=true
 show_in_folder=false
-screenshot_dir=file:/home/xeylou/Downloads
-action=1
+screenshot_dir=file:/home/xeylou
+action=2
 delay=0
 region=1
 show_mouse=0

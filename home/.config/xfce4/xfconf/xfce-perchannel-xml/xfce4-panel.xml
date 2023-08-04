@@ -47,6 +47,8 @@
         <value type="string" value="no network connection"/>
       </property>
       <property name="known-items" type="array">
+        <value type="string" value="TelegramDesktop"/>
+        <value type="string" value="obs"/>
         <value type="string" value="vlc"/>
         <value type="string" value="qBittorrent"/>
         <value type="string" value="blueman"/>
@@ -61,7 +63,7 @@
     <property name="plugin-14" type="string" value="actions"/>
     <property name="plugin-4" type="string" value="pulseaudio">
       <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
-      <property name="mpris-players" type="string" value="brave.instance10673;brave.instance12099;brave.instance12468;brave.instance12757;brave.instance13838;brave.instance13907;brave.instance15043;brave.instance15551;brave.instance16214;brave.instance17609;brave.instance1927;brave.instance19893;brave.instance1992;brave.instance2134;brave.instance2243;brave.instance24146;brave.instance2545;brave.instance25483;brave.instance2564;brave.instance2586;brave.instance3487;brave.instance3633;brave.instance4090;brave.instance4490;brave.instance4649;brave.instance5021;brave.instance5870;brave.instance6936;brave.instance7503;brave.instance7767;brave.instance9395;brave.instance9682;firefox.instance11935;firefox.instance1709;firefox.instance17976;firefox.instance22889;firefox.instance24070;firefox.instance27958;vlc;vlc.instance19122;vlc.instance20396"/>
+      <property name="mpris-players" type="string" value="brave.instance10673;brave.instance11086;brave.instance11209;brave.instance11757;brave.instance12099;brave.instance12468;brave.instance12757;brave.instance13838;brave.instance13907;brave.instance15043;brave.instance15551;brave.instance15855;brave.instance1598;brave.instance1607;brave.instance16214;brave.instance16510;brave.instance17609;brave.instance1781;brave.instance1810;brave.instance1812;brave.instance1905;brave.instance1927;brave.instance1942;brave.instance19893;brave.instance1992;brave.instance19993;brave.instance20916;brave.instance2134;brave.instance2182;brave.instance2243;brave.instance2281;brave.instance2299;brave.instance2312;brave.instance2401;brave.instance24146;brave.instance2545;brave.instance25483;brave.instance2563;brave.instance2564;brave.instance2586;brave.instance2606;brave.instance2784;brave.instance2949;brave.instance2976;brave.instance3096;brave.instance31116;brave.instance33525;brave.instance3424;brave.instance3462;brave.instance3487;brave.instance3633;brave.instance3664;brave.instance3847;brave.instance4084;brave.instance4090;brave.instance4239;brave.instance4490;brave.instance45889;brave.instance4647;brave.instance4649;brave.instance4920;brave.instance5015;brave.instance5021;brave.instance51067;brave.instance56310;brave.instance5870;brave.instance65273;brave.instance6936;brave.instance7195;brave.instance7503;brave.instance7767;brave.instance7891;brave.instance8188;brave.instance8262;brave.instance8335;brave.instance9115;brave.instance9277;brave.instance9395;brave.instance9682;brave.instance9886;firefox.instance11935;firefox.instance1709;firefox.instance17976;firefox.instance22889;firefox.instance24070;firefox.instance27958;vlc;vlc.instance19122;vlc.instance20396"/>
     </property>
   </property>
 </channel>

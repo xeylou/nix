@@ -7,7 +7,7 @@
         <property name="workspace0" type="empty">
           <property name="color-style" type="int" value="0"/>
           <property name="image-style" type="int" value="5"/>
-          <property name="last-image" type="string" value="/home/xeylou/Downloads/ganyu-genshin-impact-4k-41-5120x2880.jpg"/>
+          <property name="last-image" type="string" value="/home/xeylou/.themes/wallpapers/ganyu-genshin-impact-4k-4096x2304.jpg"/>
         </property>
         <property name="workspace1" type="empty">
           <property name="color-style" type="int" value="0"/>
@@ -29,7 +29,7 @@
         <property name="workspace0" type="empty">
           <property name="color-style" type="int" value="0"/>
           <property name="image-style" type="int" value="5"/>
-          <property name="last-image" type="string" value="/home/xeylou/Downloads/ganyu-genshin-impact-4k-41-5120x2880.jpg"/>
+          <property name="last-image" type="string" value="/home/xeylou/.themes/wallpapers/ganyu-genshin-impact-4k-4096x2304.jpg"/>
         </property>
       </property>
       <property name="monitor0" type="empty">
@@ -38,7 +38,7 @@
           <property name="image-style" type="int" value="5"/>
           <property name="last-image" type="string" value="/nix/store/q9xq7krpxbfv79lf71m9ahd57q6mmjky-xfdesktop-4.18.1/share/backgrounds/xfce/xfce-shapes.svg"/>
         </property>
-        <property name="image-path" type="string" value="/home/xeylou/Downloads/ganyu-genshin-impact-4k-41-5120x2880.jpg"/>
+        <property name="image-path" type="string" value="/home/xeylou/.themes/wallpapers/ganyu-genshin-impact-4k-4096x2304.jpg"/>
         <property name="image-show" type="bool" value="true"/>
         <property name="image-style" type="int" value="5"/>
       </property>

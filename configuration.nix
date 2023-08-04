@@ -138,8 +138,10 @@
       brave
       keepassxc
       discord
+      vencord
       vlc
       solaar  # logi pop keys buttons assignation
+
 
       # networking related
       macchanger
@@ -179,7 +181,7 @@
   };
 
   # packages installed in system profile
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [      
   ];
 
   # virtualisation related
