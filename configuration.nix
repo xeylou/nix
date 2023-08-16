@@ -131,7 +131,7 @@
     isNormalUser = true;
     description = "xeylou";
     # tss group for tpm
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" ];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "docker" "ubridge" "wireshark" "libvirt"];
     packages = with pkgs; [
 
       # software
@@ -141,7 +141,7 @@
       vencord
       vlc
       solaar  # logi pop keys buttons assignation
-
+      calibre
 
       # networking related
       macchanger
@@ -167,6 +167,10 @@
       qemu
       virt-manager
       dconf  # virt-manager dependency
+
+      gns3-server
+      gns3-gui
+      ubridge
 
       # ide & dev
       tmux
