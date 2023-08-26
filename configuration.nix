@@ -2,48 +2,36 @@
 
 {
   imports =
-    [ # results of the hardware scan
-      ./hardware-configuration.nix
+    [
+      ./hardware-configuration.nix # results of hardware scan
+      <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ];
 
-  # # dependency needed when updating
-  # nixpkgs.config.permittedInsecurePackages = [
-  #   "electron-12.2.3"
-  # ];
-  
-  #font
-  fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
-    # terminal devicons - firemono nerd font mono regular 13
-  ];
-
-  # uefi w/ out secure boot & ntfs support
+  # uefi w/ secure boot & ntfs support
   boot = {
-    supportedFilesystems = [ "ntfs" ];
-    # to deal w/ ntfs partitions
-    loader = {
-      # can be changed for grub
+  supportedFilesystems = [ "ntfs" ];
+  loader = {
       systemd-boot = {
         enable = true;
         configurationLimit = 5;
       };
-      efi.canTouchEfiVariables = true;
+  efi.canTouchEfiVariables = true;
     };
   };
 
-  # enabling tpm for w11 virt
+  # tpm for w11 virtualisation
   security.tpm2 = {
     enable = true;
     pkcs11.enable = true; # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
     tctiEnvironment.enable = true; # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
   };
 
-  # network configuration
+  # networking stuff
   networking = {
     hostName = "null";
     networkmanager.enable = true;
     
-    # # configuring /etc/hosts
+    # # to edit /etc/hosts
     # extraHosts = 
     # ''
     #   127.0.0.1 xeylou.fr
@@ -62,9 +50,10 @@
 
   };
 
-  # time zone and locale settings
-  time.timeZone = "Europe/Paris";  
-
+  # utc time zone
+  time.timeZone = "Europe/Paris";
+  
+  # locale settings
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -78,12 +67,10 @@
           LC_TELEPHONE = "en_US.UTF-8";
           LC_TIME = "en_US.UTF-8";
     };
-
   };
 
   # x11 w/ xfce
   services.xserver = {
-    # can be replaced with gdm & gnome
     enable = true;
     displayManager.lightdm.enable = true;
     desktopManager.xfce.enable = true;
@@ -98,52 +85,44 @@
   # console keymap
   console.keyMap = "fr";
 
-  # cups server (to print documents)
-  services.printing.enable = false;
-  
-  # configuring bluetooth
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
+  # printing for my brother printer
+  services.printing.enable = true; # cups server
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+  };
+  # drivers for brother printers
+  services.printing.drivers = [ pkgs.brlaser ];
 
-  # changing to pulseaudio for bluetooth needs
-  # could be replaced by pipewire under
+  # scanning for brother printer
+  hardware.sane = {
+    enable = true;
+    brscan4.enable = true; # drivers
+  };
+  services.ipp-usb.enable=true; # using usb
+
+  # sound w/ pulseaudio
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.support32Bit = true;
+  hardware.pulseaudio = {
+    enable = true;
+    support32Bit = true;
+  };
   nixpkgs.config.pulseaudio = true;
-  # hardware.pulseaudio.extraConfig = "load-module module-combine-sink";  
-  # # lines here are for pipewire
-  # pipewire.sound.enable = true;
-  # security.rtkit.enable = true;
-  # services.pipewire = {
-  #  enable = true;
-  #  alsa.enable = true;
-  #  alsa.support32Bit = true;
-  #  pulse.enable = true;
-  #  # If you want to use JACK applications, uncomment this
-  #  #jack.enable = true;
-
-  # allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # user settings
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    # tss group for tpm
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "docker" "ubridge" "wireshark" "libvirt"];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "docker" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
     packages = with pkgs; [
-
       # software
-      brave
+      sane-backends
       keepassxc
+      firefox
       discord
-      vencord
       vlc
-      solaar  # logi pop keys buttons assignation
-      calibre
-
-      # networking related
+      solaar
+      # networking
       macchanger
       wireguard-tools
       wireshark
@@ -151,50 +130,49 @@
       qbittorrent
       remmina
       freerdp
-
-      # utilities
-      openssl  # ssh keys
-      # those can be use w/ nix-shell -p
-      # unzip
-      # unrar
-      # wget
-      # gnumake
-      # gcc
-      gnupg
-      pinentry  # gnupg dependency
-
-      # virtualisation
-      qemu
-      virt-manager
-      dconf  # virt-manager dependency
-
       gns3-server
       gns3-gui
       ubridge
-
-      # ide & dev
+      dynamips
+      vpcs
+      # utilities
+      openssl
+      unzip
+      zip
+      unrar
+      rar
+      wget
+      gnumake
+      gcc
+      gnupg
+      pinentry # gnupg dependency
+      # virtualisation
+      qemu
+      virt-manager
+      dconf # virt-manager dependency
+      # dev
+      vscodium
       tmux
       vim
-      vscodium
       git
       python3
       go
       hugo
-
     ];
   };
 
+  # allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
   # packages installed in system profile
-  environment.systemPackages = with pkgs; [      
+  environment.systemPackages = with pkgs; [
   ];
 
   # virtualisation related
   virtualisation.libvirtd = {
     enable = true;
-
     onShutdown = "suspend";
     onBoot = "ignore";
-
     qemu = {
       package = pkgs.qemu_kvm;
       ovmf.enable = true;
@@ -202,7 +180,6 @@
       swtpm.enable = true;
       runAsRoot = true;
     };
-
   };
 
   # still virtualisation related
@@ -210,31 +187,22 @@
     "ovmf/edk2-x86_64-secure-code.fd" = {
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
     };
-
     "ovmf/edk2-i386-vars.fd" = {
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
     };
-  };  
-  
+  };
+
   # enabling services
   programs.dconf.enable = true;  # virt-manager related
-  # services.openssh.enable = true;
 
-  # # each time you rebuild nix
-  # # commands will be executed
-  # systemd.services.foo = {
-  #   script = ''
-  #     systemctl stop bluetooth
-  #   '';
-  # wantedBy = [ "multi-user.target" ];
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
   # };
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
+  system.stateVersion = "23.05";
 
 }
