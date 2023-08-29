@@ -101,6 +101,10 @@
   };
   services.ipp-usb.enable=true; # using usb
 
+  # bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   # sound w/ pulseaudio
   sound.enable = true;
   hardware.pulseaudio = {
@@ -113,7 +117,7 @@
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "docker" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
     packages = with pkgs; [
       # software
       sane-backends
@@ -136,6 +140,8 @@
       dynamips
       vpcs
       # utilities
+      p7zip
+      inetutils
       openssl
       unzip
       zip
