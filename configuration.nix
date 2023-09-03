@@ -101,17 +101,58 @@
   };
   services.ipp-usb.enable=true; # using usb
 
+  sound.enable = true;
+    hardware.pulseaudio = {
+      enable = true;
+      # package = pkgs.pulseaudioFull;
+      # extraConfig = ''
+      #   load-module module-switch-on-connect
+      # '';
+    };
+
+    hardware.bluetooth = {
+      enable = true;
+    };
+
+    # Workaround until this hits unstable:
+    # https://github.com/NixOS/nixpkgs/issues/113628
+    # systemd.services.bluetooth.serviceConfig.ExecStart = [
+    #   ""
+    #   "${pkgs.bluez}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf"
+    # ];
+
+    services.blueman.enable = true;
+
+
   # bluetooth
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
+  #hardware.bluetooth.enable = true;
+  #services.blueman.enable = true;
+  #hardware.bluetooth.settings = {
+  #  General = {
+  #    Enable = "Source,Sink,Media,Socket";
+  #  };
+  #};
+  #services.blueman.enable = true;
+
+  # headset buttons
+  #systemd.user.services.mpris-proxy = {
+  #  description = "Mpris proxy";
+  #  after = [ "network.target" "sound.target" ];
+  #  wantedBy = [ "default.target" ];
+  #  serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
+  #};
 
   # sound w/ pulseaudio
-  sound.enable = true;
-  hardware.pulseaudio = {
-    enable = true;
-    support32Bit = true;
-  };
-  nixpkgs.config.pulseaudio = true;
+  #sound.enable = true;
+  #hardware.pulseaudio = {
+  #  enable = true;
+  #  support32Bit = true;
+    #package = pkgs.pulseaudioFull; # more codecs
+    #extraConfig = "
+    #  load-module module-switch-on-connect
+    #";
+  #};
+  #nixpkgs.config.pulseaudio = true;
 
   # user settings
   users.users.xeylou = {
@@ -120,6 +161,7 @@
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
     packages = with pkgs; [
       # software
+      pdftk
       sane-backends
       keepassxc
       firefox
@@ -140,6 +182,7 @@
       dynamips
       vpcs
       # utilities
+      bluedevil
       p7zip
       inetutils
       openssl
@@ -152,6 +195,7 @@
       gcc
       gnupg
       pinentry # gnupg dependency
+      bluez
       # virtualisation
       qemu
       virt-manager
