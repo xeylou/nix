@@ -7,6 +7,12 @@
       <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ];
 
+  #font
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+    # terminal devicons - firemono nerd font mono regular 13
+  ];
+
   # uefi w/ secure boot & ntfs support
   boot = {
   supportedFilesystems = [ "ntfs" ];
@@ -101,58 +107,17 @@
   };
   services.ipp-usb.enable=true; # using usb
 
+  # sound
   sound.enable = true;
     hardware.pulseaudio = {
       enable = true;
-      # package = pkgs.pulseaudioFull;
-      # extraConfig = ''
-      #   load-module module-switch-on-connect
-      # '';
     };
 
+  # bluetooth
     hardware.bluetooth = {
       enable = true;
     };
-
-    # Workaround until this hits unstable:
-    # https://github.com/NixOS/nixpkgs/issues/113628
-    # systemd.services.bluetooth.serviceConfig.ExecStart = [
-    #   ""
-    #   "${pkgs.bluez}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf"
-    # ];
-
     services.blueman.enable = true;
-
-
-  # bluetooth
-  #hardware.bluetooth.enable = true;
-  #services.blueman.enable = true;
-  #hardware.bluetooth.settings = {
-  #  General = {
-  #    Enable = "Source,Sink,Media,Socket";
-  #  };
-  #};
-  #services.blueman.enable = true;
-
-  # headset buttons
-  #systemd.user.services.mpris-proxy = {
-  #  description = "Mpris proxy";
-  #  after = [ "network.target" "sound.target" ];
-  #  wantedBy = [ "default.target" ];
-  #  serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
-  #};
-
-  # sound w/ pulseaudio
-  #sound.enable = true;
-  #hardware.pulseaudio = {
-  #  enable = true;
-  #  support32Bit = true;
-    #package = pkgs.pulseaudioFull; # more codecs
-    #extraConfig = "
-    #  load-module module-switch-on-connect
-    #";
-  #};
-  #nixpkgs.config.pulseaudio = true;
 
   # user settings
   users.users.xeylou = {
@@ -161,6 +126,8 @@
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
     packages = with pkgs; [
       # software
+      nextcloud-client
+      obs-studio
       pdftk
       sane-backends
       keepassxc
@@ -182,6 +149,8 @@
       dynamips
       vpcs
       # utilities
+      btop
+      ncdu
       bluedevil
       p7zip
       inetutils
