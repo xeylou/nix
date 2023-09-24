@@ -7,7 +7,7 @@
       <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ];
 
-  #font
+  # font
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
     # terminal devicons - firemono nerd font mono regular 13
@@ -25,7 +25,7 @@
     };
   };
 
-  # tpm for w11 virtualisation
+  # tpm configuration for w11 virtualisation
   security.tpm2 = {
     enable = true;
     pkcs11.enable = true; # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
@@ -91,7 +91,7 @@
   # console keymap
   console.keyMap = "fr";
 
-  # printing for my brother printer
+  # printing server
   services.printing.enable = true; # cups server
   services.avahi = {
     enable = true;
@@ -107,7 +107,7 @@
   };
   services.ipp-usb.enable=true; # using usb
 
-  # sound
+  # sound w/ pulseaudio
   sound.enable = true;
     hardware.pulseaudio = {
       enable = true;
@@ -201,7 +201,7 @@
     };
   };
 
-  # still virtualisation related
+  # still virtualization related
   environment.etc = {
     "ovmf/edk2-x86_64-secure-code.fd" = {
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
