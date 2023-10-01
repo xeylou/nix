@@ -149,6 +149,8 @@
       dynamips
       vpcs
       # utilities
+      xorg.xdpyinfo
+      xdotool
       btop
       ncdu
       bluedevil
