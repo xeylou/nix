@@ -1,0 +1,18 @@
+# vm oracle cloud
+host oci-vm
+  Hostname 144.24.204.251
+  User ubuntu
+  Port 22
+  IdentityFile ~/.ssh/oci-vm.key
+
+# github
+host github.com
+  Hostname github.com
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/gh
+
+# gitlab uppa
+host uppa
+  Hostname git.univ-pau.fr
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/gitlab-uppa

@@ -25,7 +25,7 @@
     };
   };
 
-  # tpm configuration for w11 virtualisation
+  # tpm configuration for w11 virtualization
   security.tpm2 = {
     enable = true;
     pkcs11.enable = true; # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
@@ -37,7 +37,7 @@
     hostName = "null";
     networkmanager.enable = true;
     
-    # # to edit /etc/hosts
+    # # edit /etc/hosts
     # extraHosts = 
     # ''
     #   127.0.0.1 xeylou.fr
@@ -126,15 +126,15 @@
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
     packages = with pkgs; [
       # software
+      drawio
       nextcloud-client
       obs-studio
-      pdftk
-      sane-backends
+#      sane-backends  pour scanner
       keepassxc
       firefox
       discord
       vlc
-      solaar
+      solaar # logitech stuff
       # networking
       macchanger
       wireguard-tools
@@ -143,17 +143,16 @@
       qbittorrent
       remmina
       freerdp
-      gns3-server
-      gns3-gui
-      ubridge
-      dynamips
-      vpcs
       # utilities
-      xorg.xdpyinfo
-      xdotool
+      docker
+      docker-compose
+      screen
+#      samba
+      xorg.xdpyinfo # centering windows
+      xdotool # centering windows
       btop
       ncdu
-      bluedevil
+#      bluedevil ??
       p7zip
       inetutils
       openssl
@@ -167,14 +166,20 @@
       gnupg
       pinentry # gnupg dependency
       bluez
-      # virtualisation
+      # virtualization related
       qemu
       virt-manager
       dconf # virt-manager dependency
+      gns3-server
+      gns3-gui
+      ubridge
+      dynamips
+      vpcs
+      cpulimit # standard asa
       # dev
       vscodium
       tmux
-      vim
+#      vim
       git
       python3
       go
