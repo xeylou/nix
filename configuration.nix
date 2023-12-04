@@ -7,6 +7,15 @@
       <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ];
 
+  # # update to 23.11
+  # system = {
+  # autoUpgrade = {
+  #   enable = true;
+  #   allowReboot = false;
+  #   channel = "https://channels.nixos.org/nixos-23.11";
+  #   };
+  # };
+
   # font
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
@@ -147,12 +156,11 @@
       docker
       docker-compose
       screen
-#      samba
       xorg.xdpyinfo # centering windows
       xdotool # centering windows
       btop
       ncdu
-#      bluedevil ??
+#      bluedevil ?? bluetooth related
       p7zip
       inetutils
       openssl
@@ -175,11 +183,10 @@
       ubridge
       dynamips
       vpcs
-      cpulimit # standard asa
+      cpulimit # for standard asa
       # dev
       vscodium
       tmux
-#      vim
       git
       python3
       go
@@ -194,7 +201,7 @@
   environment.systemPackages = with pkgs; [
   ];
 
-  # virtualisation related
+  # virtualization related
   virtualisation.libvirtd = {
     enable = true;
     onShutdown = "suspend";
@@ -229,6 +236,6 @@
   #   enableSSHSupport = true;
   # };
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 
 }
