@@ -3,23 +3,13 @@
 {
   imports =
     [
-      ./hardware-configuration.nix # results of hardware scan
-      <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
+      ./hardware-configuration.nix # hardware scan results
+      #<nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ];
 
-  # # update to 23.11
-  # system = {
-  # autoUpgrade = {
-  #   enable = true;
-  #   allowReboot = false;
-  #   channel = "https://channels.nixos.org/nixos-23.11";
-  #   };
-  # };
-
-  # font
-  fonts.fonts = with pkgs; [
+  # font, firemono nerd font mono regular 13
+  fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
-    # terminal devicons - firemono nerd font mono regular 13
   ];
 
   # uefi w/ secure boot & ntfs support
@@ -41,22 +31,24 @@
     tctiEnvironment.enable = true; # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
   };
 
-  # networking stuff
+  # networking related stuff
   networking = {
     hostName = "null";
     networkmanager.enable = true;
     
-    # # edit /etc/hosts
+    # # to edit /etc/hosts
     # extraHosts = 
     # ''
     #   127.0.0.1 xeylou.fr
     # '';
 
+    # # additionnal related
     # wireless.enable = true;  # wireless support via wpa_supplicant
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
     # nftables.enable = true;
     
+    # # configure allowed exposed ports
     # firewall = {
     #    enable = true;
     #   allowedTCPPorts = [ ... ];
@@ -91,7 +83,7 @@
     desktopManager.xfce.enable = true;
   };
 
-  # keymap in x11
+  # keymap for x11
   services.xserver = {
     layout = "fr";
     xkbVariant = "";
@@ -100,12 +92,13 @@
   # console keymap
   console.keyMap = "fr";
 
-  # printing server
-  services.printing.enable = true; # cups server
+  # printing server (to use a printer)
+  services.printing.enable = true; # cups server, expose a port
   services.avahi = {
     enable = true;
     nssmdns = true;
   };
+
   # drivers for brother printers
   services.printing.drivers = [ pkgs.brlaser ];
 
@@ -135,16 +128,19 @@
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
     packages = with pkgs; [
       # software
+      typst
+      sublime
       drawio
       nextcloud-client
       obs-studio
-#      sane-backends  pour scanner
+#      sane-backends  to scan documents
       keepassxc
       firefox
       discord
       vlc
       solaar # logitech stuff
       # networking
+      ciscoPacketTracer8
       macchanger
       wireguard-tools
       wireshark
@@ -153,11 +149,13 @@
       remmina
       freerdp
       # utilities
+      speedtest-cli
+      dig
       docker
       docker-compose
       screen
       xorg.xdpyinfo # centering windows
-      xdotool # centering windows
+      xdotool # centering windows too
       btop
       ncdu
 #      bluedevil ?? bluetooth related
@@ -173,7 +171,7 @@
       gcc
       gnupg
       pinentry # gnupg dependency
-      bluez
+      bluez # also bluetooth related
       # virtualization related
       qemu
       virt-manager
@@ -189,6 +187,7 @@
       tmux
       git
       python3
+#      python311Packages.pip
       go
       hugo
     ];
