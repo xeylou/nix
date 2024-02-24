@@ -31,7 +31,22 @@
     tctiEnvironment.enable = true; # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
   };
 
-  # networking related stuff
+  # vaapi
+  nixpkgs.config.packageOverrides = pkgs: {
+    intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+  };
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+  };
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+
+  # network related stuff
   networking = {
     hostName = "null";
     networkmanager.enable = true;
@@ -60,7 +75,7 @@
   # utc time zone
   time.timeZone = "Europe/Paris";
   
-  # locale settings
+  # locale
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -92,34 +107,34 @@
   # console keymap
   console.keyMap = "fr";
 
-  # printing server (to use a printer)
-  services.printing.enable = true; # cups server, expose a port
-  services.avahi = {
-    enable = true;
-    nssmdns = true;
-  };
+  # # printing server (to use a printer)
+  # services.printing.enable = true; # cups server, exposing port
+  # services.avahi = {
+  #   enable = true;
+  #   nssmdns = true;
+  # };
 
-  # drivers for brother printers
-  services.printing.drivers = [ pkgs.brlaser ];
+  # # drivers for brother printers
+  # services.printing.drivers = [ pkgs.brlaser ];
 
-  # scanning for brother printer
-  hardware.sane = {
-    enable = true;
-    brscan4.enable = true; # drivers
-  };
-  services.ipp-usb.enable=true; # using usb
+  # # scanning for brother printer
+  # hardware.sane = {
+  #   enable = true;
+  #   brscan4.enable = true; # drivers
+  # };
+  # services.ipp-usb.enable=true; # using usb
 
   # sound w/ pulseaudio
   sound.enable = true;
-    hardware.pulseaudio = {
-      enable = true;
-    };
+  hardware.pulseaudio = {
+    enable = true;
+  };
 
   # bluetooth
-    hardware.bluetooth = {
-      enable = true;
-    };
-    services.blueman.enable = true;
+  hardware.bluetooth = {
+    enable = true;
+  };
+  services.blueman.enable = true;
 
   # user settings
   users.users.xeylou = {
@@ -128,11 +143,12 @@
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
     packages = with pkgs; [
       # software
-      typst
+      joplin-desktop
+      # typst
       sublime
-      drawio
+      # drawio
       nextcloud-client
-      obs-studio
+      # obs-studio
 #      sane-backends  to scan documents
       keepassxc
       firefox
@@ -149,17 +165,18 @@
       remmina
       freerdp
       # utilities
-      speedtest-cli
+      libva-utils
+      # speedtest-cli
       dig
-      docker
-      docker-compose
-      screen
+      # docker
+      # docker-compose
+      # screen
       xorg.xdpyinfo # centering windows
       xdotool # centering windows too
       btop
       ncdu
-#      bluedevil ?? bluetooth related
-      p7zip
+      # bluedevil ?? bluetooth related (works w/out)
+      # p7zip
       inetutils
       openssl
       unzip
@@ -184,7 +201,7 @@
       cpulimit # for standard asa
       # dev
       vscodium
-      tmux
+      # tmux
       git
       python3
 #      python311Packages.pip
