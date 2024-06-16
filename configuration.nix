@@ -12,7 +12,7 @@
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
   ];
 
-  # uefi w/ secure boot & ntfs support
+  # uefi w/out secure boot & ntfs support
   boot = {
   supportedFilesystems = [ "ntfs" ];
   loader = {
@@ -22,6 +22,7 @@
       };
   efi.canTouchEfiVariables = true;
     };
+  # kernel.sysctl."net.ipv4.ip_forward" = 1;
   };
 
   # tpm configuration for w11 virtualization
@@ -46,15 +47,15 @@
   };
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
-  # network related stuff
+  # network related
   networking = {
     hostName = "null";
     networkmanager.enable = true;
     
-    # # to edit /etc/hosts
+    # # to add to /etc/hosts
     # extraHosts = 
     # ''
-    #   127.0.0.1 xeylou.fr
+    #   127.0.0.1 localhost
     # '';
 
     # # additionnal related
@@ -69,7 +70,11 @@
     #   allowedTCPPorts = [ ... ];
     #   allowedUDPPorts = [ ... ];
     # };
-
+    # nat.enable = false;
+    # firewall.enable = false;
+    #   nftables = {
+    # enable = true;
+  # };
   };
 
   # utc time zone
@@ -136,19 +141,27 @@
   };
   services.blueman.enable = true;
 
+  # cron
+  services.cron = {
+    enable = true;
+    systemCronJobs = [
+      "*/15 * * * *      root    sysctl -w vm.drop_caches=3"
+    ];
+  };
+
+
   # user settings
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" ];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" "docker" ];
     packages = with pkgs; [
       # software
+#      obs-studio
       joplin-desktop
-      # typst
       sublime
-      # drawio
-      nextcloud-client
-      # obs-studio
+      drawio
+#      nextcloud-client
 #      sane-backends  to scan documents
       keepassxc
       firefox
@@ -157,26 +170,29 @@
       solaar # logitech stuff
       # networking
       ciscoPacketTracer8
-      macchanger
+#      macchanger
       wireguard-tools
-      wireshark
-      openvpn
+#      wireshark
+#      openvpn
       qbittorrent
       remmina
       freerdp
       # utilities
-      libva-utils
-      # speedtest-cli
+      screen
+#      texliveFull
+      #mongosh
+      #docker
+      #docker-compose
+      #sqlitebrowser
+#      pandoc
+#      vim
+      libva-utils # gpu
       dig
-      # docker
-      # docker-compose
-      # screen
       xorg.xdpyinfo # centering windows
       xdotool # centering windows too
       btop
       ncdu
       # bluedevil ?? bluetooth related (works w/out)
-      # p7zip
       inetutils
       openssl
       unzip
@@ -184,8 +200,8 @@
       unrar
       rar
       wget
-      gnumake
-      gcc
+      #gnumake
+      #gcc
       gnupg
       pinentry # gnupg dependency
       bluez # also bluetooth related
@@ -193,20 +209,19 @@
       qemu
       virt-manager
       dconf # virt-manager dependency
-      gns3-server
-      gns3-gui
-      ubridge
-      dynamips
-      vpcs
-      cpulimit # for standard asa
+#      gns3-server
+#      gns3-gui
+#      ubridge
+#      dynamips
+#      vpcs
+#      cpulimit # for standard asa
       # dev
       vscodium
-      # tmux
       git
-      python3
+#      python3
 #      python311Packages.pip
-      go
-      hugo
+#      go
+#      hugo
     ];
   };
 
@@ -230,6 +245,9 @@
       runAsRoot = true;
     };
   };
+
+  # docker related
+  #virtualisation.docker.enable = true;
 
   # still virtualization related
   environment.etc = {
