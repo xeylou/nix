@@ -4,7 +4,7 @@
   imports =
     [
       ./hardware-configuration.nix # hardware scan results
-      #<nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
+      <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ];
 
   # font, firemono nerd font mono regular 13
@@ -39,6 +39,7 @@
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
+      #vpl-gpu-rt          # for newer GPUs on NixOS >24.05 or unstable
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
       intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
@@ -105,35 +106,46 @@
 
   # keymap for x11
   services.xserver = {
-    layout = "fr";
-    xkbVariant = "";
+    xkb.layout = "fr";
+    xkb.variant = "";
   };
 
   # console keymap
   console.keyMap = "fr";
 
-  # # printing server (to use a printer)
-  # services.printing.enable = true; # cups server, exposing port
-  # services.avahi = {
-  #   enable = true;
-  #   nssmdns = true;
-  # };
+  # printing server (to use a printer)
+  services.printing.enable = true; # cups server, exposing port
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+  };
 
-  # # drivers for brother printers
-  # services.printing.drivers = [ pkgs.brlaser ];
+  # drivers for brother printers
+  services.printing.drivers = [ pkgs.brlaser ];
 
-  # # scanning for brother printer
-  # hardware.sane = {
-  #   enable = true;
-  #   brscan4.enable = true; # drivers
-  # };
-  # services.ipp-usb.enable=true; # using usb
+  # scanning for brother printer
+  hardware.sane = {
+    enable = true;
+    brscan4.enable = true; # drivers
+  };
+  services.ipp-usb.enable=true; # using usb
 
   # sound w/ pulseaudio
   sound.enable = true;
   hardware.pulseaudio = {
     enable = true;
   };
+
+#  # rtkit is optional but recommended
+#  security.rtkit.enable = true;
+#  services.pipewire = {
+#    enable = true;
+#    alsa.enable = true;
+#    alsa.support32Bit = true;
+#    pulse.enable = true;
+#    # If you want to use JACK applications, uncomment this
+#    #jack.enable = true;
+#  };
 
   # bluetooth
   hardware.bluetooth = {
@@ -145,7 +157,7 @@
   services.cron = {
     enable = true;
     systemCronJobs = [
-      "*/15 * * * *      root    sysctl -w vm.drop_caches=3"
+      "*/10 * * * *      root    sysctl -w vm.drop_caches=3"
     ];
   };
 
@@ -157,7 +169,8 @@
     extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" "docker" ];
     packages = with pkgs; [
       # software
-#      obs-studio
+      anydesk
+      obs-studio
       joplin-desktop
       sublime
       drawio
@@ -165,7 +178,9 @@
 #      sane-backends  to scan documents
       keepassxc
       firefox
-      discord
+      thunderbird
+#      discord
+      vesktop
       vlc
       solaar # logitech stuff
       # networking
@@ -173,11 +188,16 @@
 #      macchanger
       wireguard-tools
 #      wireshark
-#      openvpn
+      openvpn
       qbittorrent
       remmina
       freerdp
       # utilities
+#      kdeconnect-kde
+      noisetorch
+#      pwvucontrol
+#      easyeffects
+#      pulseeffects-legacy
       screen
 #      texliveFull
       #mongosh
@@ -209,19 +229,20 @@
       qemu
       virt-manager
       dconf # virt-manager dependency
-#      gns3-server
-#      gns3-gui
-#      ubridge
-#      dynamips
-#      vpcs
-#      cpulimit # for standard asa
+      gns3-server
+      gns3-gui
+      ubridge
+      dynamips
+      vpcs
+      cpulimit # for standard asa
       # dev
       vscodium
       git
 #      python3
 #      python311Packages.pip
-#      go
-#      hugo
+      go
+      hugo
+      zola
     ];
   };
 
