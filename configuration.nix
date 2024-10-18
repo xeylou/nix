@@ -31,6 +31,14 @@
     pkcs11.enable = true; # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
     tctiEnvironment.enable = true; # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
   };
+  security.wrappers.ubridge = {
+    source = "/run/current-system/sw/bin/ubridge";
+    capabilities = "cap_net_admin,cap_net_raw=ep";
+    # owner = "root";
+    owner = "xeylou";
+    group = "ubridge";
+    permissions = "u+rx,g+x";
+  };
 
   # vaapi
   nixpkgs.config.packageOverrides = pkgs: {
@@ -163,10 +171,11 @@
 
 
   # user settings
+  users.groups.ubridge = {};
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" "docker" "ubridge" ];
     packages = with pkgs; [
       # software
       anydesk
@@ -205,7 +214,7 @@
       #docker-compose
       #sqlitebrowser
 #      pandoc
-#      vim
+      vim
       libva-utils # gpu
       dig
       xorg.xdpyinfo # centering windows
@@ -229,16 +238,21 @@
       qemu
       virt-manager
       dconf # virt-manager dependency
-      gns3-server
+      gns3-server      
       gns3-gui
       ubridge
       dynamips
       vpcs
       cpulimit # for standard asa
+      vmware-workstation
       # dev
+      libgccjit
+      xorg.libX11
+      xorg.xorgproto
+      libGL
       vscodium
       git
-#      python3
+      python3
 #      python311Packages.pip
       go
       hugo
@@ -251,9 +265,11 @@
 
   # packages installed in system profile
   environment.systemPackages = with pkgs; [
+    #ubridge
   ];
 
   # virtualization related
+  virtualisation.vmware.host.enable = true;
   virtualisation.libvirtd = {
     enable = true;
     onShutdown = "suspend";
