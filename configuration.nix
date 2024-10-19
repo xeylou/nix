@@ -7,7 +7,7 @@
       <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ];
 
-  # font, firemono nerd font mono regular 13
+  # firemono nerd font, mono regular 13
   fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
   ];
@@ -22,8 +22,10 @@
       };
   efi.canTouchEfiVariables = true;
     };
-  # kernel.sysctl."net.ipv4.ip_forward" = 1;
   };
+
+  # # activate ipv4 forward
+  # kernel/sysctl."net.ipv4.ip_froward" = 1;
 
   # tpm configuration for w11 virtualization
   security.tpm2 = {
@@ -31,16 +33,17 @@
     pkcs11.enable = true; # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
     tctiEnvironment.enable = true; # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
   };
+
+  # ubridge configuration for user gns3 configuration
   security.wrappers.ubridge = {
     source = "/run/current-system/sw/bin/ubridge";
     capabilities = "cap_net_admin,cap_net_raw=ep";
-    # owner = "root";
     owner = "xeylou";
     group = "ubridge";
     permissions = "u+rx,g+x";
   };
 
-  # vaapi
+  # vaapi (video driver)
   nixpkgs.config.packageOverrides = pkgs: {
     intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
   };
@@ -61,7 +64,7 @@
     hostName = "null";
     networkmanager.enable = true;
     
-    # # to add to /etc/hosts
+    # # to add hosts to /etc/hosts
     # extraHosts = 
     # ''
     #   127.0.0.1 localhost
@@ -155,20 +158,19 @@
 #    #jack.enable = true;
 #  };
 
-  # bluetooth
+  # bluetooth support
   hardware.bluetooth = {
     enable = true;
   };
   services.blueman.enable = true;
 
-  # cron
+  # cron free ram peridocally
   services.cron = {
     enable = true;
     systemCronJobs = [
       "*/10 * * * *      root    sysctl -w vm.drop_caches=3"
     ];
   };
-
 
   # user settings
   users.groups.ubridge = {};
@@ -183,37 +185,28 @@
       joplin-desktop
       sublime
       drawio
-#      nextcloud-client
-#      sane-backends  to scan documents
+      sane-backends # to scan documents
       keepassxc
       firefox
       thunderbird
-#      discord
-      vesktop
+      vesktop # discord w/ sounded screenshare, krisp...
       vlc
       solaar # logitech stuff
       # networking
       ciscoPacketTracer8
-#      macchanger
+      macchanger
       wireguard-tools
-#      wireshark
+      wireshark
       openvpn
       qbittorrent
       remmina
       freerdp
       # utilities
-#      kdeconnect-kde
-      noisetorch
-#      pwvucontrol
-#      easyeffects
-#      pulseeffects-legacy
       screen
-#      texliveFull
-      #mongosh
-      #docker
-      #docker-compose
-      #sqlitebrowser
-#      pandoc
+      # docker
+      # docker-compose
+      # sqlitebrowser
+      # pandoc
       vim
       libva-utils # gpu
       dig
@@ -229,8 +222,6 @@
       unrar
       rar
       wget
-      #gnumake
-      #gcc
       gnupg
       pinentry # gnupg dependency
       bluez # also bluetooth related
@@ -253,7 +244,7 @@
       vscodium
       git
       python3
-#      python311Packages.pip
+      python311Packages.pip
       go
       hugo
       zola
@@ -265,7 +256,7 @@
 
   # packages installed in system profile
   environment.systemPackages = with pkgs; [
-    #ubridge
+    # put packages here
   ];
 
   # virtualization related
