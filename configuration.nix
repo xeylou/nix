@@ -177,7 +177,7 @@
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" "docker" "ubridge" ];
+    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" "docker" "ubridge" "user-with-access-to-virtualbox" ];
     packages = with pkgs; [
       # software
       anydesk
@@ -237,7 +237,8 @@
       cpulimit # for standard asa
       vmware-workstation
       # dev
-      libgccjit
+      # libgccjit
+      # binutils # gcc dependency
       xorg.libX11
       xorg.xorgproto
       libGL
@@ -260,6 +261,13 @@
   ];
 
   # virtualization related
+  virtualisation.virtualbox = {
+    host = {
+      enable = true;
+      enableExtensionPack = true;
+    };
+  };
+  
   virtualisation.vmware.host.enable = true;
   virtualisation.libvirtd = {
     enable = true;
@@ -298,6 +306,6 @@
   #   enableSSHSupport = true;
   # };
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 
 }
