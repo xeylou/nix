@@ -1,26 +1,23 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix # hardware scan results
-      <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
-    ];
+  imports = [
+    ./hardware-configuration.nix # hardware scan results
+    <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
+  ];
 
   # firemono nerd font, mono regular 13
-  fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
-  ];
+  fonts.packages = with pkgs; [ (nerdfonts.override { fonts = [ "FiraCode" ]; }) ];
 
   # uefi w/out secure boot & ntfs support
   boot = {
-  supportedFilesystems = [ "ntfs" ];
-  loader = {
+    supportedFilesystems = [ "ntfs" ];
+    loader = {
       systemd-boot = {
         enable = true;
         configurationLimit = 5;
       };
-  efi.canTouchEfiVariables = true;
+      efi.canTouchEfiVariables = true;
     };
   };
 
@@ -57,13 +54,15 @@
       libvdpau-va-gl
     ];
   };
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  }; # Force intel-media-driver
 
   # network related
   networking = {
     hostName = "null";
     networkmanager.enable = true;
-    
+
     # # to add hosts to /etc/hosts
     # extraHosts = 
     # ''
@@ -75,7 +74,7 @@
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
     # nftables.enable = true;
-    
+
     # # configure allowed exposed ports
     # firewall = {
     #    enable = true;
@@ -86,25 +85,25 @@
     # firewall.enable = false;
     #   nftables = {
     # enable = true;
-  # };
+    # };
   };
 
   # utc time zone
   time.timeZone = "Europe/Paris";
-  
+
   # locale
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
-          LC_ADDRESS = "en_US.UTF-8";
-          LC_IDENTIFICATION = "en_US.UTF-8";
-          LC_MEASUREMENT = "en_US.UTF-8";
-          LC_MONETARY = "en_US.UTF-8";
-          LC_NAME = "en_US.UTF-8";
-          LC_NUMERIC = "en_US.UTF-8";
-          LC_PAPER = "en_US.UTF-8";
-          LC_TELEPHONE = "en_US.UTF-8";
-          LC_TIME = "en_US.UTF-8";
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
     };
   };
 
@@ -139,7 +138,7 @@
     enable = true;
     brscan4.enable = true; # drivers
   };
-  services.ipp-usb.enable=true; # using usb
+  services.ipp-usb.enable = true; # using usb
 
   # sound w/ pulseaudio
   sound.enable = true;
@@ -147,16 +146,16 @@
     enable = true;
   };
 
-#  # rtkit is optional but recommended
-#  security.rtkit.enable = true;
-#  services.pipewire = {
-#    enable = true;
-#    alsa.enable = true;
-#    alsa.support32Bit = true;
-#    pulse.enable = true;
-#    # If you want to use JACK applications, uncomment this
-#    #jack.enable = true;
-#  };
+  #  # rtkit is optional but recommended
+  #  security.rtkit.enable = true;
+  #  services.pipewire = {
+  #    enable = true;
+  #    alsa.enable = true;
+  #    alsa.support32Bit = true;
+  #    pulse.enable = true;
+  #    # If you want to use JACK applications, uncomment this
+  #    #jack.enable = true;
+  #  };
 
   # bluetooth support
   hardware.bluetooth = {
@@ -167,17 +166,31 @@
   # cron free ram peridocally
   services.cron = {
     enable = true;
-    systemCronJobs = [
-      "*/10 * * * *      root    sysctl -w vm.drop_caches=3"
-    ];
+    systemCronJobs = [ "*/10 * * * *      root    sysctl -w vm.drop_caches=3" ];
   };
 
   # user settings
-  users.groups.ubridge = {};
+  users.groups.ubridge = { };
   users.users.xeylou = {
     isNormalUser = true;
     description = "xeylou";
-    extraGroups = [ "networkmanager" "wheel" "kvm" "libvirtd" "audio" "tss" "ubridge" "wireshark" "libvirt" "scanner" "lp" "docker" "ubridge" "user-with-access-to-virtualbox" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "kvm"
+      "libvirtd"
+      "audio"
+      "tss"
+      "ubridge"
+      "wireshark"
+      "libvirt"
+      "scanner"
+      "lp"
+      "docker"
+      "ubridge"
+      "user-with-access-to-virtualbox"
+      "vboxusers"
+    ];
     packages = with pkgs; [
       # software
       anydesk
@@ -202,6 +215,7 @@
       remmina
       freerdp
       # utilities
+      nixfmt-rfc-style
       screen
       # docker
       # docker-compose
@@ -229,7 +243,7 @@
       qemu
       virt-manager
       dconf # virt-manager dependency
-      gns3-server      
+      gns3-server
       gns3-gui
       ubridge
       dynamips
@@ -267,7 +281,7 @@
       enableExtensionPack = true;
     };
   };
-  
+
   virtualisation.vmware.host.enable = true;
   virtualisation.libvirtd = {
     enable = true;
@@ -296,7 +310,7 @@
   };
 
   # enabling services
-  programs.dconf.enable = true;  # virt-manager related
+  programs.dconf.enable = true; # virt-manager related
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
