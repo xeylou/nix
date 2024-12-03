@@ -24,6 +24,9 @@
   # # activate ipv4 forward
   # kernel/sysctl."net.ipv4.ip_froward" = 1;
 
+  # sudo w/ out password
+  security.sudo.wheelNeedsPassword = false;
+
   # tpm configuration for w11 virtualization
   security.tpm2 = {
     enable = true;
@@ -32,6 +35,28 @@
   };
 
   # ubridge configuration for user gns3 configuration
+  services.gns3-server.ubridge.enable = true;
+  services.gns3-server.settings = {
+    Server.ubridge_path = pkgs.lib.mkForce "/run/wrappers/bin/ubridge";
+  };
+  users.groups.gns3 = { };
+  users.users.gns3 = {
+    group = "gns3";
+    isSystemUser = true;
+  };
+  systemd.services.gns3-server.serviceConfig = {
+    User = "gns3";
+    DynamicUser = pkgs.lib.mkForce false;
+    NoNewPrivileges = pkgs.lib.mkForce false;
+    RestrictSUIDSGID = pkgs.lib.mkForce false;
+    PrivateUsers = pkgs.lib.mkForce false;
+    DeviceAllow = [
+      "/dev/net/tun rw"
+      "/dev/net/tap rw"
+    ] ++ pkgs.lib.optionals config.virtualisation.libvirtd.enable [
+      "/dev/kvm"
+    ];
+  };
   security.wrappers.ubridge = {
     source = "/run/current-system/sw/bin/ubridge";
     capabilities = "cap_net_admin,cap_net_raw=ep";
@@ -62,7 +87,7 @@
   networking = {
     hostName = "null";
     networkmanager.enable = true;
-
+    # nameservers = [ "8.8.8.8" "9.9.9.9" ];
     # # to add hosts to /etc/hosts
     # extraHosts = 
     # ''
@@ -113,6 +138,9 @@
     displayManager.lightdm.enable = true;
     desktopManager.xfce.enable = true;
   };
+
+  # dwm
+  # services.xserver.windowManager.dwm.enable = true;  
 
   # keymap for x11
   services.xserver = {
@@ -190,12 +218,14 @@
       "ubridge"
       "user-with-access-to-virtualbox"
       "vboxusers"
+      "gns3"
     ];
     packages = with pkgs; [
       # software
+      spotify
       anydesk
       obs-studio
-      joplin-desktop
+      # joplin-desktop
       sublime
       drawio
       sane-backends # to scan documents
@@ -214,23 +244,30 @@
       qbittorrent
       remmina
       freerdp
-      # utilities
+      # tools
+      screenkey
+      shellcheck
+      protonmail-desktop
       nixfmt-rfc-style
       screen
-      # docker
-      # docker-compose
+      docker
+      docker-compose
       # sqlitebrowser
       # pandoc
       vim
+      neovim
       libva-utils # gpu
       dig
       xorg.xdpyinfo # centering windows
       xdotool # centering windows too
       btop
+      intel-gpu-tools
+      nvtopPackages.intel
       ncdu
       # bluedevil ?? bluetooth related (works w/out)
       inetutils
       openssl
+      p7zip
       unzip
       zip
       unrar
@@ -267,7 +304,12 @@
   };
 
   # allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    permittedInsecurePackages = [
+      "qbittorrent-4.6.4"
+    ];
+  };
 
   # packages installed in system profile
   environment.systemPackages = with pkgs; [
@@ -297,7 +339,7 @@
   };
 
   # docker related
-  #virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
 
   # still virtualization related
   environment.etc = {
