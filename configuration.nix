@@ -87,12 +87,12 @@
   networking = {
     hostName = "null";
     networkmanager.enable = true;
-    # nameservers = [ "8.8.8.8" "9.9.9.9" ];
-    # # to add hosts to /etc/hosts
-    # extraHosts = 
-    # ''
-    #   127.0.0.1 localhost
-    # '';
+    nameservers = [ "8.8.8.8" "9.9.9.9" ];
+    # to add hosts to /etc/hosts
+    extraHosts = 
+    ''
+      127.0.0.1 youtube.com
+    '';
 
     # # additionnal related
     # wireless.enable = true;  # wireless support via wpa_supplicant
@@ -169,21 +169,21 @@
   services.ipp-usb.enable = true; # using usb
 
   # sound w/ pulseaudio
-  sound.enable = true;
+  # sound.enable = false;
   hardware.pulseaudio = {
-    enable = true;
+    enable = false;
   };
 
   #  # rtkit is optional but recommended
   #  security.rtkit.enable = true;
-  #  services.pipewire = {
+  services.pipewire = {
   #    enable = true;
   #    alsa.enable = true;
   #    alsa.support32Bit = true;
-  #    pulse.enable = true;
+    pulse.enable = true;
   #    # If you want to use JACK applications, uncomment this
   #    #jack.enable = true;
-  #  };
+  };
 
   # bluetooth support
   hardware.bluetooth = {
@@ -241,7 +241,7 @@
       wireguard-tools
       wireshark
       openvpn
-      qbittorrent
+      # qbittorrent
       remmina
       freerdp
       # tools
@@ -306,9 +306,9 @@
   # allow unfree packages
   nixpkgs.config = {
     allowUnfree = true;
-    permittedInsecurePackages = [
-      "qbittorrent-4.6.4"
-    ];
+    # permittedInsecurePackages = [
+    #    "qbittorrent-4.6.4"
+    #  ];
   };
 
   # packages installed in system profile
@@ -362,6 +362,6 @@
   #   enableSSHSupport = true;
   # };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 
 }
