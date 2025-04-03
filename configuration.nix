@@ -21,7 +21,7 @@
     };
   };
 
-  # # activate ipv4 forward
+  # activate ipv4 forward
   # kernel/sysctl."net.ipv4.ip_froward" = 1;
 
   # sudo w/ out password
@@ -58,18 +58,18 @@
     ];
   };
   security.wrappers.ubridge = {
-    source = "/run/current-system/sw/bin/ubridge";
+    source = "/etc/profiles/per-user/xeylou/bin/ubridge";
     capabilities = "cap_net_admin,cap_net_raw=ep";
     owner = "xeylou";
     group = "ubridge";
-    permissions = "u+rx,g+x";
+    permissions = "u+rx,g+rx,o+rx";
   };
 
   # vaapi (video driver)
   nixpkgs.config.packageOverrides = pkgs: {
     intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
   };
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
       #vpl-gpu-rt          # for newer GPUs on NixOS >24.05 or unstable
@@ -83,24 +83,27 @@
     LIBVA_DRIVER_NAME = "iHD";
   }; # Force intel-media-driver
 
+  # tex
+  # texlive.withPackages (ps: [ ps.latexmk ]);
+
   # network related
   networking = {
-    hostName = "null";
+    hostName = "bread";
     networkmanager.enable = true;
     nameservers = [ "8.8.8.8" "9.9.9.9" ];
     # to add hosts to /etc/hosts
     extraHosts = 
     ''
-      127.0.0.1 youtube.com
+      # 127.0.0.1 www.youtube.com
     '';
 
-    # # additionnal related
+    # additionnal network related
     # wireless.enable = true;  # wireless support via wpa_supplicant
     # proxy.default = "http://user:password@proxy:port/";
     # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
     # nftables.enable = true;
 
-    # # configure allowed exposed ports
+    # configure allowed exposed ports
     # firewall = {
     #    enable = true;
     #   allowedTCPPorts = [ ... ];
@@ -128,7 +131,7 @@
       LC_NUMERIC = "en_US.UTF-8";
       LC_PAPER = "en_US.UTF-8";
       LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
+      LC_TIME = "en_IE.UTF-8";
     };
   };
 
@@ -138,9 +141,7 @@
     displayManager.lightdm.enable = true;
     desktopManager.xfce.enable = true;
   };
-
-  # dwm
-  # services.xserver.windowManager.dwm.enable = true;  
+  services.gnome.gnome-keyring.enable = true;
 
   # keymap for x11
   services.xserver = {
@@ -192,10 +193,10 @@
   services.blueman.enable = true;
 
   # cron free ram peridocally
-  services.cron = {
-    enable = true;
-    systemCronJobs = [ "*/10 * * * *      root    sysctl -w vm.drop_caches=3" ];
-  };
+  # services.cron = {
+  #   enable = true;
+  #   systemCronJobs = [ "*/10 * * * *      root    sysctl -w vm.drop_caches=3" ];
+  # };
 
   # user settings
   users.groups.ubridge = { };
@@ -219,11 +220,14 @@
       "user-with-access-to-virtualbox"
       "vboxusers"
       "gns3"
+      "admin"
+      "sudo"
     ];
     packages = with pkgs; [
       # software
+      libreoffice
+      pinta
       spotify
-      anydesk
       obs-studio
       # joplin-desktop
       sublime
@@ -233,6 +237,7 @@
       firefox
       thunderbird
       vesktop # discord w/ sounded screenshare, krisp...
+      discord-canary
       vlc
       solaar # logitech stuff
       # networking
@@ -241,10 +246,12 @@
       wireguard-tools
       wireshark
       openvpn
-      # qbittorrent
+      qbittorrent
       remmina
       freerdp
       # tools
+#      gnome-keyring
+      nmap
       screenkey
       shellcheck
       protonmail-desktop
@@ -255,6 +262,7 @@
       # sqlitebrowser
       # pandoc
       vim
+      # tex
       neovim
       libva-utils # gpu
       dig
@@ -294,6 +302,7 @@
       xorg.xorgproto
       libGL
       vscodium
+      vscode
       git
       python3
       python311Packages.pip
@@ -313,18 +322,20 @@
 
   # packages installed in system profile
   environment.systemPackages = with pkgs; [
-    # put packages here
+    anydesk
+    # put system-wide packages here
   ];
 
   # virtualization related
   virtualisation.virtualbox = {
     host = {
       enable = true;
-      enableExtensionPack = true;
+      # enableExtensionPack = true;
     };
   };
 
   virtualisation.vmware.host.enable = true;
+
   virtualisation.libvirtd = {
     enable = true;
     onShutdown = "suspend";
@@ -338,9 +349,6 @@
     };
   };
 
-  # docker related
-  virtualisation.docker.enable = true;
-
   # still virtualization related
   environment.etc = {
     "ovmf/edk2-x86_64-secure-code.fd" = {
@@ -350,6 +358,9 @@
       source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
     };
   };
+
+  # docker related
+  virtualisation.docker.enable = true;
 
   # enabling services
   programs.dconf.enable = true; # virt-manager related
