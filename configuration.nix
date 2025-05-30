@@ -114,6 +114,7 @@
     #   nftables = {
     # enable = true;
     # };
+
   };
 
   # utc time zone
@@ -241,7 +242,7 @@
       vlc
       solaar # logitech stuff
       # networking
-      ciscoPacketTracer8
+      # ciscoPacketTracer8
       macchanger
       wireguard-tools
       wireshark
@@ -294,7 +295,7 @@
       dynamips
       vpcs
       cpulimit # for standard asa
-      vmware-workstation
+      # vmware-workstation
       # dev
       # libgccjit
       # binutils # gcc dependency
@@ -322,7 +323,8 @@
 
   # packages installed in system profile
   environment.systemPackages = with pkgs; [
-    anydesk
+    badlion-client
+    # anydesk
     # put system-wide packages here
   ];
 
@@ -334,7 +336,7 @@
     };
   };
 
-  virtualisation.vmware.host.enable = true;
+  # virtualisation.vmware.host.enable = true;
 
   virtualisation.libvirtd = {
     enable = true;
@@ -374,5 +376,7 @@
   # };
 
   system.stateVersion = "24.11";
+
+  nixpkgs.config.allowBroken = true;
 
 }
